@@ -4,7 +4,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import re
 from inspect import ismethod
 
-from django.contrib.gis.geos import Point
+# from django.contrib.gis.geos import Point
 from django.template import loader
 from django.utils import datetime_safe, six
 
@@ -244,44 +244,44 @@ class CharField(SearchField):
         return six.text_type(value)
 
 
-class LocationField(SearchField):
-    field_type = "location"
+# class LocationField(SearchField):
+#     field_type = "location"
 
-    def prepare(self, obj):
-        from haystack.utils.geo import ensure_point
+#     def prepare(self, obj):
+#         from haystack.utils.geo import ensure_point
 
-        value = super(LocationField, self).prepare(obj)
+#         value = super(LocationField, self).prepare(obj)
 
-        if value is None:
-            return None
+#         if value is None:
+#             return None
 
-        pnt = ensure_point(value)
-        pnt_lng, pnt_lat = pnt.coords
-        return "%s,%s" % (pnt_lat, pnt_lng)
+#         pnt = ensure_point(value)
+#         pnt_lng, pnt_lat = pnt.coords
+#         return "%s,%s" % (pnt_lat, pnt_lng)
 
-    def convert(self, value):
-        from haystack.utils.geo import ensure_point
+#     def convert(self, value):
+#         from haystack.utils.geo import ensure_point
 
-        if value is None:
-            return None
+#         if value is None:
+#             return None
 
-        if hasattr(value, "geom_type"):
-            value = ensure_point(value)
-            return value
+#         if hasattr(value, "geom_type"):
+#             value = ensure_point(value)
+#             return value
 
-        if isinstance(value, six.string_types):
-            lat, lng = value.split(",")
-        elif isinstance(value, (list, tuple)):
-            # GeoJSON-alike
-            lat, lng = value[1], value[0]
-        elif isinstance(value, dict):
-            lat = value.get("lat", 0)
-            lng = value.get("lon", 0)
-        else:
-            raise TypeError("Unable to extract coordinates from %r" % value)
+#         if isinstance(value, six.string_types):
+#             lat, lng = value.split(",")
+#         elif isinstance(value, (list, tuple)):
+#             # GeoJSON-alike
+#             lat, lng = value[1], value[0]
+#         elif isinstance(value, dict):
+#             lat = value.get("lat", 0)
+#             lng = value.get("lon", 0)
+#         else:
+#             raise TypeError("Unable to extract coordinates from %r" % value)
 
-        value = Point(float(lng), float(lat))
-        return value
+#         value = Point(float(lng), float(lat))
+#         return value
 
 
 class NgramField(CharField):
